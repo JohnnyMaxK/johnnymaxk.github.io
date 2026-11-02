@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import MarkdownPage from '../components/MarkdownPage.astro';
+import { formatDate, slugOf } from '../i18n/ui';
+const latest = (await getCollection('idees', (e) => e.id.startsWith('fr/') && !e.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+<MarkdownPage id="accueil">
+  {latest.length > 0 && (
+    <section aria-labelledby="derniers-ecrits">
+      <h2 id="derniers-ecrits">Derniers écrits</h2>
+      <ul class="post-list">
+        {latest.map((e) => (
+          <li>
+            <a href={`/ecrits/${slugOf(e.id)}/`}>{e.data.title}</a>
+            <span class="meta"> · <time datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</MarkdownPage>

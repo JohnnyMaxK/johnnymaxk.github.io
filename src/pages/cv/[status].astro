@@ -1,0 +1,11 @@
+---
+// Result pages of the CV request (redirect targets of public/cv.php and public/cv-download.php).
+// Text in src/content/pages/fr/cv-<status>.md. Not indexed, left out of the sitemap.
+import MarkdownPage from '../../components/MarkdownPage.astro';
+
+export function getStaticPaths() {
+  return ['merci', 'erreur', 'limite', 'lien-expire'].map((status) => ({ params: { status } }));
+}
+const { status } = Astro.params;
+---
+<MarkdownPage id={`cv-${status}`} noindex />

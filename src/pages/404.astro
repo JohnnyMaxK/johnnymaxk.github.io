@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../i18n/ui';
+---
+<Base title={t('fr', '404.title')} noindex>
+  <h1>{t('fr', '404.title')}</h1>
+  <p>{t('fr', '404.text')}</p>
+  <p><a href="/">{t('fr', '404.home')}</a></p>
+</Base>

@@ -1,0 +1,40 @@
+---
+import { nav, t, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">{t(lang, 'site.name')}</a>
+    <nav aria-label={t(lang, 'nav.label')}>
+      <ul>
+        {nav.map((item) => (
+          <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(lang, item.key)}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" id="theme-toggle" aria-label={t(lang, 'theme.toggle')} hidden>
+      <span aria-hidden="true">◐</span>
+    </button>
+  </div>
+</header>
+<script is:inline>
+  (function () {
+    var b = document.getElementById('theme-toggle');
+    if (!b) return;
+    b.hidden = false;
+    var root = document.documentElement;
+    function current() {
+      return root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+    b.setAttribute('aria-pressed', String(current() === 'dark'));
+    b.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      b.setAttribute('aria-pressed', String(next === 'dark'));
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>

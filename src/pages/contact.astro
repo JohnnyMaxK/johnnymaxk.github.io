@@ -1,0 +1,10 @@
+---
+import MarkdownPage from '../components/MarkdownPage.astro';
+import { contact } from '../site.config';
+---
+<MarkdownPage id="contact">
+  <ul>
+    <li>LinkedIn : <a href={contact.linkedin} rel="me noopener">linkedin.com/in/johnny-knoblauch</a></li>
+    <li>Mail : <a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+  </ul>
+</MarkdownPage>

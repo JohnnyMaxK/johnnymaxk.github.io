@@ -1,0 +1,21 @@
+---
+// Renders one fixed page from src/content/pages/<lang>/<id>.md:
+// the Markdown body, then the slot (generated content), then the optional `outro` paragraphs.
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { defaultLang, type Lang } from '../i18n/ui';
+
+interface Props { id: string; lang?: Lang; noindex?: boolean }
+const { id, lang = defaultLang, noindex = false } = Astro.props;
+const entry = await getEntry('pages', `${lang}/${id}`);
+if (!entry) throw new Error(`Missing page content: src/content/pages/${lang}/${id}.md`);
+const { Content } = await render(entry);
+---
+<Base title={entry.data.title} description={entry.data.description} lang={lang} noindex={noindex}>
+  <article>
+    <h1>{entry.data.title}</h1>
+    <Content />
+    <slot />
+    {entry.data.outro.map((p) => <p>{p}</p>)}
+  </article>
+</Base>

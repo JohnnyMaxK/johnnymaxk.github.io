@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+*.log
+.DS_Store
+# CV endpoints: filled config, PDF and counters never go in git.
+cv-private/
+public/_private/*
+!public/_private/.htaccess
+*.pdf

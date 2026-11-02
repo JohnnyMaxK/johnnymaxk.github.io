@@ -1,0 +1,2 @@
+# Fallback location of the CV config, PDF and counters when PHP cannot read outside the web root. Never served.
+Require all denied

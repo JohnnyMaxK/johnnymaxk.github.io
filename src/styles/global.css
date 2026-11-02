@@ -1,0 +1,107 @@
+/* System font stack only: no external or bundled web fonts. */
+:root {
+  --bg: #ffffff;
+  --surface: #f4f6f8;
+  --text: #1a1a1a;        /* 17.4:1 on --bg */
+  --muted: #4f5660;       /* 7.4:1 on --bg */
+  --accent: #1f4f8a;      /* 8.2:1 on --bg */
+  --border: #d5dae0;
+  --focus: #b3470a;
+  --max: 42rem;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #121417;
+    --surface: #1c2026;
+    --text: #e9ebee;      /* 15.6:1 */
+    --muted: #b3b9c2;     /* 9.4:1 */
+    --accent: #8fbaf5;    /* 9.0:1 */
+    --border: #343a44;
+    --focus: #ffb37a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #121417;
+  --surface: #1c2026;
+  --text: #e9ebee;
+  --muted: #b3b9c2;
+  --accent: #8fbaf5;
+  --border: #343a44;
+  --focus: #ffb37a;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 1rem; }
+
+a { color: var(--accent); text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+.skip-link { position: absolute; left: -9999px; top: 0; }
+.skip-link:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--bg); padding: 0.5rem 0.75rem; }
+
+header.site { border-bottom: 1px solid var(--border); }
+header.site .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; padding-block: 1rem; }
+.brand { font-weight: 700; color: var(--text); text-decoration: none; font-size: 1.1rem; }
+nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+nav a { text-decoration: none; padding: 0.35rem 0; display: inline-block; min-height: 24px; }
+nav a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; font-weight: 600; }
+
+.theme-toggle {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.3rem 0.6rem; font: inherit; cursor: pointer; min-width: 44px; min-height: 44px;
+}
+.theme-toggle:hover { background: var(--surface); }
+
+main { padding-block: 2rem 3rem; }
+h1, h2, h3 { line-height: 1.25; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); margin-top: 0; }
+img { max-width: 100%; height: auto; }
+pre { overflow-x: auto; background: var(--surface); padding: 1rem; border-radius: 6px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+blockquote { margin-inline: 0; padding-left: 1rem; border-left: 4px solid var(--border); color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+.lead { font-size: 1.15rem; color: var(--muted); }
+.meta { color: var(--muted); font-size: 0.95rem; }
+
+.post-list { list-style: none; padding: 0; }
+.post-list li { padding-block: 1rem; border-bottom: 1px solid var(--border); }
+.post-list h2 { font-size: 1.25rem; margin: 0 0 0.25rem; }
+.tags { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tags li { background: var(--surface); border-radius: 4px; padding: 0.1rem 0.5rem; font-size: 0.9rem; }
+
+footer.site { border-top: 1px solid var(--border); color: var(--muted); font-size: 0.95rem; }
+footer.site .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* CV request form (Parcours). */
+.cv-request { margin-top: 2.5rem; padding: 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.cv-request h2 { margin-top: 0; }
+.cv-request label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+.cv-request input[type='email'] {
+  width: 100%; font: inherit; color: var(--text); background: var(--bg);
+  border: 1px solid var(--muted); border-radius: 6px; padding: 0.55rem 0.7rem; min-height: 44px;
+}
+.cv-consent { display: flex; gap: 0.6rem; align-items: flex-start; }
+.cv-consent input { margin-top: 0.35rem; width: 1.15rem; height: 1.15rem; flex: none; }
+.cv-consent label { font-weight: 400; }
+.cv-request button {
+  font: inherit; font-weight: 600; color: var(--bg); background: var(--accent);
+  border: 0; border-radius: 6px; padding: 0.6rem 1.1rem; min-height: 44px; cursor: pointer;
+}
+.cv-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

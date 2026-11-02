@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /cv-download.php
+Disallow: /cv/
+
+Sitemap: https://johnny.knoblauch.fr/sitemap-index.xml
