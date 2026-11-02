@@ -27,7 +27,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     b.hidden = false;
     var root = document.documentElement;
     function current() {
-      return root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      return root.dataset.theme || 'dark';
     }
     b.setAttribute('aria-pressed', String(current() === 'dark'));
     b.addEventListener('click', function () {

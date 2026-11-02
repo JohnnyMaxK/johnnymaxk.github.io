@@ -31,7 +31,8 @@ const ogImage = new URL(image, Astro.site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={t(lang, 'idees.rss')} href="/rss.xml" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#1f1812" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={siteName} />
@@ -44,7 +45,7 @@ const ogImage = new URL(image, Astro.site);
     <meta property="og:locale" content="fr_FR" />
     {published && <meta property="article:published_time" content={published.toISOString()} />}
     <meta name="twitter:card" content="summary_large_image" />
-    <!-- Theme: follows the system unless the visitor chose one (stored locally, never sent). -->
+    <!-- Theme: dark unless the visitor chose light (stored locally, never sent). -->
     <script is:inline>
       try { const s = localStorage.getItem('theme'); if (s === 'light' || s === 'dark') document.documentElement.dataset.theme = s; } catch (e) {}
     </script>
@@ -52,6 +53,7 @@ const ogImage = new URL(image, Astro.site);
   <body>
     <a class="skip-link" href="#contenu">{t(lang, 'skip')}</a>
     <Header lang={lang} />
+    <slot name="bandeau" />
     <main id="contenu" class="wrap" tabindex="-1">
       <slot />
     </main>

@@ -1,12 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 import MarkdownPage from '../components/MarkdownPage.astro';
+import Bandeau from '../components/Bandeau.astro';
 import { formatDate, slugOf } from '../i18n/ui';
 const latest = (await getCollection('idees', (e) => e.id.startsWith('fr/') && !e.data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 ---
 <MarkdownPage id="accueil">
+  <Bandeau slot="bandeau" />
   {latest.length > 0 && (
     <section aria-labelledby="derniers-ecrits">
       <h2 id="derniers-ecrits">Derniers écrits</h2>

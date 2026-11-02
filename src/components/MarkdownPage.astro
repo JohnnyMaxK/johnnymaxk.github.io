@@ -12,6 +12,7 @@ if (!entry) throw new Error(`Missing page content: src/content/pages/${lang}/${i
 const { Content } = await render(entry);
 ---
 <Base title={entry.data.title} description={entry.data.description} lang={lang} noindex={noindex}>
+  <slot name="bandeau" slot="bandeau" />
   <article>
     <h1>{entry.data.title}</h1>
     <Content />

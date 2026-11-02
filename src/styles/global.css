@@ -1,36 +1,28 @@
 /* System font stack only: no external or bundled web fonts. */
+/* Warm café browns, cream text, periwinkle links, gold italics. Dark by default; light if the visitor chooses it. */
 :root {
-  --bg: #ffffff;
-  --surface: #f4f6f8;
-  --text: #1a1a1a;        /* 17.4:1 on --bg */
-  --muted: #4f5660;       /* 7.4:1 on --bg */
-  --accent: #1f4f8a;      /* 8.2:1 on --bg */
-  --border: #d5dae0;
-  --focus: #b3470a;
+  --bg: #1f1812;
+  --surface: #2c2219;
+  --text: #f3ece2;
+  --muted: #c9bdae;
+  --accent: #b4c8e8;
+  --gold: #e8cf9f;
+  --border: #4a3c2e;
+  --focus: #e8cf9f;
+  --serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
   --max: 42rem;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #121417;
-    --surface: #1c2026;
-    --text: #e9ebee;      /* 15.6:1 */
-    --muted: #b3b9c2;     /* 9.4:1 */
-    --accent: #8fbaf5;    /* 9.0:1 */
-    --border: #343a44;
-    --focus: #ffb37a;
-    color-scheme: dark;
-  }
-}
-:root[data-theme='dark'] {
-  --bg: #121417;
-  --surface: #1c2026;
-  --text: #e9ebee;
-  --muted: #b3b9c2;
-  --accent: #8fbaf5;
-  --border: #343a44;
-  --focus: #ffb37a;
   color-scheme: dark;
+}
+:root[data-theme='light'] {
+  --bg: #faf6ef;
+  --surface: #f1e9dc;
+  --text: #2a2018;
+  --muted: #5c4f42;
+  --accent: #2f4d7d;
+  --gold: #7d5a1e;
+  --border: #dccfbc;
+  --focus: #7d5a1e;
+  color-scheme: light;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -54,7 +46,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 header.site { border-bottom: 1px solid var(--border); }
 header.site .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; padding-block: 1rem; }
-.brand { font-weight: 700; color: var(--text); text-decoration: none; font-size: 1.1rem; }
+.brand { font-family: var(--serif); font-weight: 400; color: var(--text); text-decoration: none; font-size: 1.15rem; }
 nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
 nav a { text-decoration: none; padding: 0.35rem 0; display: inline-block; min-height: 24px; }
 nav a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; font-weight: 600; }
@@ -65,13 +57,14 @@ nav a[aria-current='page'] { text-decoration: underline; text-decoration-thickne
 }
 .theme-toggle:hover { background: var(--surface); }
 
-main { padding-block: 2rem 3rem; }
-h1, h2, h3 { line-height: 1.25; }
+main.wrap { padding-block: 2rem 3rem; }
+h1, h2, h3 { line-height: 1.25; font-family: var(--serif); font-weight: 400; }
+main em { color: var(--gold); }
 h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); margin-top: 0; }
 img { max-width: 100%; height: auto; }
 pre { overflow-x: auto; background: var(--surface); padding: 1rem; border-radius: 6px; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
-blockquote { margin-inline: 0; padding-left: 1rem; border-left: 4px solid var(--border); color: var(--muted); }
+blockquote { margin-inline: 0; padding-left: 1rem; border-left: 2px solid var(--accent); color: var(--muted); }
 hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 .lead { font-size: 1.15rem; color: var(--muted); }
 .meta { color: var(--muted); font-size: 0.95rem; }
@@ -87,6 +80,21 @@ footer.site .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; gap: 
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Home band. Colours fixed: the photo background stays dark in both themes. */
+.bandeau { background: #2e2319 url('/images/bandeau-cafe.jpg') left center / cover no-repeat; }
+.bandeau-in { display: flex; align-items: center; gap: 1.75rem; padding-block: 2.25rem; }
+.bandeau img { flex: none; width: 9.5rem; height: 9.5rem; border-radius: 50%; border: 3px solid #f3ece2; }
+.bandeau-txt p { margin: 0; }
+.bandeau-kicker { color: #b4c8e8; letter-spacing: 0.03em; padding-bottom: 0.6rem; margin-bottom: 0.6rem !important; position: relative; }
+.bandeau-kicker::after { content: ''; position: absolute; left: 0; bottom: 0; width: 3rem; border-bottom: 1px solid #b4c8e8; }
+.bandeau-line { font-family: var(--serif); font-size: clamp(1.55rem, 4.4vw, 2.2rem); line-height: 1.2; color: #f3ece2; }
+.bandeau-line em { color: #e8cf9f; }
+@media (max-width: 34rem) {
+  .bandeau-in { flex-direction: column; align-items: flex-start; gap: 1.1rem; padding-block: 1.75rem; }
+  .bandeau img { width: 7rem; height: 7rem; }
+  .bandeau { background-image: linear-gradient(rgba(46, 35, 25, 0.25), rgba(46, 35, 25, 0.9) 45%), url('/images/bandeau-cafe.jpg'); }
 }
 
 /* CV request form (Parcours). */
