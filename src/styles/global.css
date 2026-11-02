@@ -44,18 +44,41 @@ a:hover { text-decoration-thickness: 2px; }
 .skip-link { position: absolute; left: -9999px; top: 0; }
 .skip-link:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--bg); padding: 0.5rem 0.75rem; }
 
+/* Site header. Phone: six entries in two rows of three, the theme toggle at the right end. From 34rem: one line. Both sit on the text column. */
 header.site { border-bottom: 1px solid var(--border); }
-header.site .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; padding-block: 1rem; }
-.brand { font-family: var(--serif); font-weight: 400; color: var(--text); text-decoration: none; font-size: 1.15rem; }
-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
-nav a { text-decoration: none; padding: 0.35rem 0; display: inline-block; min-height: 24px; }
-nav a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; font-weight: 600; }
-
-.theme-toggle {
-  background: transparent; color: var(--text); border: 1px solid var(--border);
-  border-radius: 6px; padding: 0.3rem 0.6rem; font: inherit; cursor: pointer; min-width: 44px; min-height: 44px;
+.brand-row { display: flex; }
+.brand { display: inline-flex; align-items: center; min-height: 44px; padding-top: 0.5rem; font-family: var(--serif); color: var(--text); text-decoration: none; font-size: 1.15rem; }
+.menu {
+  list-style: none; max-width: var(--max); margin: 0 auto; padding: 0.25rem 1rem;
+  display: grid; grid-template-columns: repeat(3, auto) 44px; justify-content: space-between;
 }
-.theme-toggle:hover { background: var(--surface); }
+.menu li[hidden] { display: none; }
+.menu a { display: flex; align-items: center; min-width: 44px; min-height: 44px; color: var(--muted); font-size: 0.9375rem; text-decoration: none; }
+.menu a[aria-current='page'] { color: var(--text); text-decoration: underline 2px var(--gold); text-underline-offset: 0.45em; }
+.theme-cell { grid-column: 4; grid-row: 1 / span 2; align-self: center; }
+.theme-toggle { display: flex; align-items: center; justify-content: flex-end; width: 44px; height: 44px; background: transparent; color: var(--muted); border: 0; padding: 0; cursor: pointer; }
+.theme-toggle svg { width: 1.25rem; height: 1.25rem; }
+@media (hover: hover) {
+  .menu a:hover, .theme-toggle:hover { color: var(--text); }
+}
+@media (max-width: 22rem) {
+  .menu a { font-size: 0.875rem; }
+}
+@media (max-width: 18rem) {
+  .menu { grid-template-columns: repeat(2, auto); }
+  .theme-cell { grid-column: auto; grid-row: auto; }
+}
+@media (min-width: 18.01rem) and (max-width: 34rem) {
+  /* Fixed rows: the entries keep their place when the toggle is absent (no JS). */
+  .menu li:nth-child(-n+3) { grid-row: 1; }
+  .menu li:nth-child(n+4):nth-child(-n+6) { grid-row: 2; }
+}
+@media (min-width: 34.01rem) {
+  .menu { display: flex; flex-wrap: wrap; align-items: center; padding-block: 0; }
+  .menu a { padding-inline: 0.5rem; }
+  .menu li:first-child { margin-left: -0.5rem; }
+  .theme-cell { margin-left: auto; }
+}
 
 main.wrap { padding-block: 2rem 3rem; }
 h1, h2, h3 { line-height: 1.25; font-family: var(--serif); font-weight: 400; }
@@ -87,14 +110,20 @@ footer.site .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; gap: 
 .bandeau-in { display: flex; align-items: center; gap: 1.75rem; padding-block: 2.25rem; }
 .bandeau img { flex: none; width: 9.5rem; height: 9.5rem; border-radius: 50%; border: 3px solid #f3ece2; }
 .bandeau-txt p { margin: 0; }
+.bandeau h1 { margin: 0 0 0.5rem; font-size: clamp(1.2rem, 3vw, 1.4rem); color: #f3ece2; }
 .bandeau-kicker { color: #b4c8e8; letter-spacing: 0.03em; padding-bottom: 0.6rem; margin-bottom: 0.6rem !important; position: relative; }
 .bandeau-kicker::after { content: ''; position: absolute; left: 0; bottom: 0; width: 3rem; border-bottom: 1px solid #b4c8e8; }
 .bandeau-line { font-family: var(--serif); font-size: clamp(1.55rem, 4.4vw, 2.2rem); line-height: 1.2; color: #f3ece2; }
 .bandeau-line em { color: #e8cf9f; }
 @media (max-width: 34rem) {
-  .bandeau-in { flex-direction: column; align-items: flex-start; gap: 1.1rem; padding-block: 1.75rem; }
-  .bandeau img { width: 7rem; height: 7rem; }
-  .bandeau { background-image: linear-gradient(rgba(46, 35, 25, 0.25), rgba(46, 35, 25, 0.9) 45%), url('/images/bandeau-cafe.jpg'); }
+  /* Portrait and name side by side, then the kicker and the line, as on the banner. */
+  .bandeau { background-image: linear-gradient(rgba(46, 35, 25, 0.6), rgba(46, 35, 25, 0.92) 55%), url('/images/bandeau-cafe.jpg'); }
+  .bandeau-in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.9rem 1rem; align-items: center; padding-block: 1.5rem; }
+  .bandeau-txt { display: contents; }
+  .bandeau img { width: 5.5rem; height: 5.5rem; border-width: 2px; }
+  .bandeau h1 { margin: 0; font-size: 1.35rem; }
+  .bandeau-kicker, .bandeau-line { grid-column: 1 / -1; }
+  .bandeau-kicker { margin-bottom: 0 !important; }
 }
 
 /* CV request form (Parcours). */

@@ -3,37 +3,34 @@ import { nav, t, type Lang } from '../i18n/ui';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+// Articles live under /ecrits/ and belong to Idées in the menu.
+const section = path.startsWith('/ecrits/') ? '/idees/' : path;
+const isCurrent = (href: string) => (href === '/' ? section === '/' : section.startsWith(href));
 ---
 <header class="site">
-  <div class="wrap">
-    <a class="brand" href="/">{t(lang, 'site.name')}</a>
-    <nav aria-label={t(lang, 'nav.label')}>
-      <ul>
-        {nav.map((item) => (
-          <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(lang, item.key)}</a></li>
-        ))}
-      </ul>
-    </nav>
-    <button class="theme-toggle" type="button" id="theme-toggle" aria-label={t(lang, 'theme.toggle')} hidden>
-      <span aria-hidden="true">◐</span>
-    </button>
-  </div>
+  {path !== '/' && <div class="wrap brand-row"><a class="brand" href="/">{t(lang, 'site.name')}</a></div>}
+  <nav aria-label={t(lang, 'nav.label')}>
+    <ul class="menu">
+      {nav.map((item) => (
+        <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(lang, item.key)}</a></li>
+      ))}
+      <li class="theme-cell" id="theme-cell" hidden>
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label={t(lang, 'theme.toggle')}>
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M10 1.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor" /></svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
 </header>
 <script is:inline>
   (function () {
     var b = document.getElementById('theme-toggle');
     if (!b) return;
-    b.hidden = false;
+    document.getElementById('theme-cell').hidden = false;
     var root = document.documentElement;
-    function current() {
-      return root.dataset.theme || 'dark';
-    }
-    b.setAttribute('aria-pressed', String(current() === 'dark'));
     b.addEventListener('click', function () {
-      var next = current() === 'dark' ? 'light' : 'dark';
+      var next = (root.dataset.theme || 'dark') === 'dark' ? 'light' : 'dark';
       root.dataset.theme = next;
-      b.setAttribute('aria-pressed', String(next === 'dark'));
       try { localStorage.setItem('theme', next); } catch (e) {}
     });
   })();

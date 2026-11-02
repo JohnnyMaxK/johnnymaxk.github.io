@@ -52,8 +52,8 @@ const ogImage = new URL(image, Astro.site);
   </head>
   <body>
     <a class="skip-link" href="#contenu">{t(lang, 'skip')}</a>
-    <Header lang={lang} />
     <slot name="bandeau" />
+    <Header lang={lang} />
     <main id="contenu" class="wrap" tabindex="-1">
       <slot />
     </main>

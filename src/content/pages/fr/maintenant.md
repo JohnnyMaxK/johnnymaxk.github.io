@@ -7,7 +7,7 @@ description: "Ce que fait Johnny KNOBLAUCH cet automne : il écoute, il écrit, 
 
 **J’écoute.** Cet automne, je vais aux rencontres tech et entrepreneurs de Touraine et d’Orléans, en spectateur : pour écouter ceux qui font, pas pour parler.
 
-**J’écris.** Une note par semaine sur LinkedIn, et les plus solides [ici](/ecrits/).
+**J’écris.** Une note par semaine sur LinkedIn, et les plus solides [ici](/idees/).
 
 **Je lis.** Allen Holub sur le backlog et les équipes, et ce que les équipes publient sur le mob programming avec l’IA.
 

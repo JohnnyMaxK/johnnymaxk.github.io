@@ -7,6 +7,7 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   build: { format: 'directory' },
+  redirects: { '/ecrits/': '/idees/' },
   // i18n-ready: French is the default locale and is served without a prefix.
   // To add English later: add 'en' to locales, create src/content/*/en/ and src/pages/en/.
   i18n: {
@@ -16,7 +17,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/404') && !page.includes('/cv/'),
+      filter: (page) => !page.includes('/404') && !page.includes('/cv/') && !page.endsWith('/ecrits/'),
       i18n: { defaultLocale: 'fr', locales: { fr: 'fr-FR' } },
     }),
   ],
