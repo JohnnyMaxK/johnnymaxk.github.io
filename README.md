@@ -63,7 +63,7 @@ Nothing is deployed yet and no DNS record exists. Two options:
 
 ## CV on request (PHP, Infomaniak web hosting only)
 
-**Current state (GitHub Pages, static):** the form is disabled. `src/components/CvForm.astro` shows a mailto link to johnny@jmk.studio instead, and the legal notice states that the site collects no data. The PHP files below are kept for a possible move to Infomaniak web hosting; to restore the form there, bring back the form markup from git history (`git log -- src/components/CvForm.astro`) and the GDPR section of `mentions-legales.md`.
+**Current state (GitHub Pages, static):** the form is disabled. `src/components/CvForm.astro` shows a mailto link to johnny@knoblauch.fr instead, and the legal notice states that the site collects no data. The PHP files below are kept for a possible move to Infomaniak web hosting; to restore the form there, bring back the form markup from git history (`git log -- src/components/CvForm.astro`) and the GDPR section of `mentions-legales.md`.
 
 The CV PDF is never public: the visitor leaves an e-mail address on `/parcours/` and receives a download link valid 7 days. Requires Apache + PHP 8.1 or later (Infomaniak shared web hosting); on a static-only host the form cannot work.
 
