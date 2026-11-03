@@ -25,7 +25,7 @@ Ma conviction : le pourquoi se décide avec ceux qui savent faire, et avec le cl
 
 ## CTO/CPO · International Marketplace Network
 
-<p class="meta">Depuis 2017</p>
+<p class="meta">2017-2023</p>
 
 Un produit créé par BeezUP, devenu la coentreprise de quatre grandes marketplaces européennes. J’y ai porté à la fois la vision produit et l’architecture : un seul arbitrage entre valeur, effort et risque. L’objectif financier prévu à deux ans a été atteint en deux mois.
 
@@ -43,7 +43,7 @@ J’ai conduit l’audit technologique d’un concurrent brésilien de 80 person
 
 <p class="meta">2003-2004 · Aix-en-Provence</p>
 
-Ce centre construisait les logiciels des agences de la communauté Arpège, qui regroupait alors les agences de Caisse d’Épargne de la région méditerranéenne. J’y ai été le premier salarié d’une équipe d’intégration jusque-là composée uniquement de prestataires. Je construisais le logiciel qui intègre les briques applicatives aux socles techniques et à la version fonctionnelle. Avec des spécialistes de Windows Server, j’ai construit le nouveau portail des postes de travail en agence : le lancement des applications mises à disposition des employés, et un navigateur dédié, bâti sur les composants Windows de l’époque, qui ouvrait le poste sur les applications auxquelles chacun avait droit. J’ai aussi développé un outil interne de documentation des procédures de l’entreprise, en ASP.NET, alors tout nouveau ; j’y ai encadré deux développeurs qui découvraient .NET.
+Ce centre construisait les logiciels des agences de la communauté Arpège, qui regroupait alors des agences de la région méditerranéenne. J’y ai été le premier salarié d’une équipe d’intégration jusque-là composée uniquement de prestataires. Je construisais le logiciel qui intègre les briques applicatives aux socles techniques et à la version fonctionnelle. Avec des spécialistes de Windows Server, j’ai construit le nouveau portail des postes de travail en agence : le lancement des applications mises à disposition des employés, et un navigateur dédié, bâti sur les composants Windows de l’époque, qui ouvrait le poste sur les applications auxquelles chacun avait droit. J’ai aussi développé un outil interne de documentation des procédures de l’entreprise, en ASP.NET, alors tout nouveau ; j’y ai encadré deux développeurs qui découvraient .NET.
 
 *Ce que j’en retiens* : J’ai été embauché parce qu’à l’entretien j’ai parlé d’un livre, *UML en action*, de Pascal Roques et Franck Vallée, et de son processus en Y : la branche technique, la branche fonctionnelle, et l’intégration qui les réunit et mène jusqu’à la production. L’entreprise était organisée exactement comme ça. C’était l’une de mes toutes premières expériences, et un architecte m’y a appris à définir le périmètre d’un projet et ses points d’abstraction, pour faire les choses de façon assez générique : c’est lui qui m’a appris à voir les choses comme un architecte.
 
