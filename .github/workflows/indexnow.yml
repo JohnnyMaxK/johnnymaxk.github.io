@@ -1,0 +1,36 @@
+# Notify IndexNow engines (Bing, Yandex, Seznam, DuckDuckGo…) to re-crawl after a deploy.
+# Single source of truth: the built sitemap for the URL list, public/<key>.txt for the key.
+# (Google does not use IndexNow: use Search Console for Google.)
+name: IndexNow ping
+
+on:
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Submit the live sitemap URLs to IndexNow
+        run: |
+          set -euo pipefail
+          HOST="johnny.knoblauch.fr"
+          KEYFILE="$(ls public/*.txt | xargs -n1 basename | grep -E '^[0-9a-f]{8,128}\.txt$' | head -1 || true)"
+          [ -n "$KEYFILE" ] || { echo "::error::No IndexNow key file (public/<hex>.txt)."; exit 1; }
+          KEY="${KEYFILE%.txt}"
+          # URL list = every <loc> of the sitemap as served (the deploy just finished).
+          mapfile -t URLS < <(curl -fsSL "https://$HOST/sitemap-0.xml" | grep -oE '<loc>[^<]+</loc>' | sed -E 's#</?loc>##g')
+          [ "${#URLS[@]}" -gt 0 ] || { echo "::error::No <loc> in the live sitemap."; exit 1; }
+          echo "Found ${#URLS[@]} URL(s)."
+          PAYLOAD="$(printf '%s\n' "${URLS[@]}" | jq -R . | jq -s --arg host "$HOST" --arg key "$KEY" --arg loc "https://$HOST/$KEYFILE" '{host:$host, key:$key, keyLocation:$loc, urlList:.}')"
+          CODE="$(curl -sS -o /tmp/resp -w '%{http_code}' -X POST 'https://api.indexnow.org/indexnow' -H 'Content-Type: application/json; charset=utf-8' --data-binary "$PAYLOAD")"
+          echo "IndexNow responded HTTP $CODE"; cat /tmp/resp || true; echo
+          case "$CODE" in 200|202) echo "Submitted." ;; *) echo "::error::IndexNow submission failed (HTTP $CODE)."; exit 1 ;; esac

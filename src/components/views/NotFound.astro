@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import { localePath, t, type Lang } from '../../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<Base title={t(lang, '404.title')} lang={lang} noindex translated={false}>
+  <h1>{t(lang, '404.title')}</h1>
+  <p>{t(lang, '404.text')}</p>
+  <p><a href={localePath(lang, '/')}>{t(lang, '404.home')}</a></p>
+</Base>

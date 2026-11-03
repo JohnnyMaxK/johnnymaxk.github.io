@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro build && node tools/checks/site-check.mjs",
+    "og": "node tools/og/make-og.mjs"
   },
   "dependencies": {
     "astro": "7.4.4",

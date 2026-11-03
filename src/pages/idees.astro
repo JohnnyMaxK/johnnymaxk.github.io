@@ -1,27 +1,4 @@
 ---
-// Idées: text from src/content/pages/fr/idees.md, then the published articles
-// from src/content/idees/fr/ (drafts left out). Nothing is added when there are none.
-import { getCollection } from 'astro:content';
-import MarkdownPage from '../components/MarkdownPage.astro';
-import { formatDate, slugOf, t } from '../i18n/ui';
-const posts = (await getCollection('idees', (e) => e.id.startsWith('fr/') && !e.data.draft))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+import Idees from '../components/views/Idees.astro';
 ---
-<MarkdownPage id="idees">
-  {posts.length > 0 && (
-    <>
-      <hr />
-      <ul class="post-list">
-        {posts.map((p) => (
-          <li>
-            <h2><a href={`/ecrits/${slugOf(p.id)}/`}>{p.data.title}</a></h2>
-            <p class="meta"><time datetime={p.data.date.toISOString()}>{formatDate(p.data.date)}</time></p>
-            <p>{p.data.description}</p>
-            {p.data.tags.length > 0 && <ul class="tags" aria-label="Thèmes">{p.data.tags.map((tag) => <li>{tag}</li>)}</ul>}
-          </li>
-        ))}
-      </ul>
-      <p class="meta"><a href="/rss.xml">{t('fr', 'ecrits.rss')}</a></p>
-    </>
-  )}
-</MarkdownPage>
+<Idees lang="fr" />

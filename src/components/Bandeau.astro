@@ -1,13 +1,20 @@
 ---
-// Home page band: portrait and café background.
+// Home page band: portrait on the café photo, the name, the line he signs with.
+import { type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const copy = {
+  fr: { kicker: 'Depuis l’IA, seul le pourquoi compte', line: 'L’IA pour les corvées,', em: 'l’Humain pour le vrai' },
+  en: { kicker: 'Since AI, only the why matters', line: 'AI for the chores,', em: 'humans for what matters' },
+}[lang];
 ---
 <section class="bandeau" aria-labelledby="nom">
   <div class="wrap bandeau-in">
-    <img src="/images/johnny-knoblauch.jpg" width="320" height="320" alt="Johnny KNOBLAUCH" />
+    <img src="/images/johnny-knoblauch.jpg" width="320" height="320" alt="Johnny KNOBLAUCH" fetchpriority="high" />
     <div class="bandeau-txt">
       <h1 id="nom">Johnny KNOBLAUCH</h1>
-      <p class="bandeau-kicker">Depuis l’IA, seul le pourquoi compte</p>
-      <p class="bandeau-line">L’IA pour les corvées,<br /><em>l’Humain pour le vrai</em></p>
+      <p class="bandeau-kicker">{copy.kicker}</p>
+      <p class="bandeau-line">{copy.line}<br /><em>{copy.em}</em></p>
     </div>
   </div>
 </section>

@@ -1,0 +1,10 @@
+---
+import MarkdownPage from '../MarkdownPage.astro';
+import CvForm from '../CvForm.astro';
+import { type Lang } from '../../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<MarkdownPage id="parcours" lang={lang} articleClass="timeline">
+  <CvForm lang={lang} />
+</MarkdownPage>

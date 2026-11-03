@@ -1,21 +1,31 @@
 ---
-import { nav, t, type Lang } from '../i18n/ui';
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+import { nav, t, localePath, stripLang, type Lang } from '../i18n/ui';
+interface Props { lang: Lang; switchHref?: string }
+const { lang, switchHref } = Astro.props;
 const path = Astro.url.pathname;
-// Articles live under /ecrits/ and belong to Idées in the menu.
-const section = path.startsWith('/ecrits/') ? '/idees/' : path;
-const isCurrent = (href: string) => (href === '/' ? section === '/' : section.startsWith(href));
+const bare = stripLang(path);
+const isCurrent = (href: string) => (href === '/' ? bare === '/' : bare.startsWith(href));
+const otherLang = t(lang, 'lang.switch.lang') as Lang;
+const kicker = { fr: 'Depuis l’IA, seul le pourquoi compte', en: 'Since AI, only the why matters' }[lang];
 ---
 <header class="site">
-  {path !== '/' && <div class="wrap brand-row"><a class="brand" href="/">{t(lang, 'site.name')}</a></div>}
+  {bare !== '/' && (
+    <div class="wrap brand-row">
+      <a class="brand" href={localePath(lang, '/')}>
+        <img src="/images/johnny-knoblauch.jpg" width="80" height="80" alt="" />
+        <span class="brand-name">{t(lang, 'site.name')}</span>
+        <span class="brand-kicker">{kicker}</span>
+      </a>
+    </div>
+  )}
   <nav aria-label={t(lang, 'nav.label')}>
     <ul class="menu">
       {nav.map((item) => (
-        <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(lang, item.key)}</a></li>
+        <li><a href={localePath(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(lang, item.key)}</a></li>
       ))}
-      <li class="theme-cell" id="theme-cell" hidden>
-        <button class="theme-toggle" type="button" id="theme-toggle" aria-label={t(lang, 'theme.toggle')}>
+      <li class="menu-tools">
+        {switchHref && <a class="lang-switch" href={switchHref} hreflang={otherLang} lang={otherLang} rel="alternate" aria-label={t(lang, 'lang.switch')}><span class="lang-long">{t(lang, 'lang.switch')}</span><span class="lang-short" aria-hidden="true">{otherLang.toUpperCase()}</span></a>}
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label={t(lang, 'theme.toggle')} hidden>
           <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M10 1.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor" /></svg>
         </button>
       </li>
@@ -26,7 +36,7 @@ const isCurrent = (href: string) => (href === '/' ? section === '/' : section.st
   (function () {
     var b = document.getElementById('theme-toggle');
     if (!b) return;
-    document.getElementById('theme-cell').hidden = false;
+    b.hidden = false;
     var root = document.documentElement;
     b.addEventListener('click', function () {
       var next = (root.dataset.theme || 'dark') === 'dark' ? 'light' : 'dark';

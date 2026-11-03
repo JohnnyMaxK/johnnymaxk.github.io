@@ -1,0 +1,37 @@
+---
+// Idées: intro from src/content/pages/<lang>/idees.md, then the position notes in order, then dated articles.
+import MarkdownPage from '../MarkdownPage.astro';
+import { formatDate, localePath, t, type Lang } from '../../i18n/ui';
+import { postPath, posts } from '../../lib';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const all = await posts(lang);
+const notes = all.filter((p) => p.data.kind === 'note');
+const articles = all.filter((p) => p.data.kind !== 'note');
+---
+<MarkdownPage id="idees" lang={lang}>
+  <ol class="note-list">
+    {notes.map((p) => (
+      <li id={p.data.anchor}>
+        <p class="eyebrow">{p.data.tag}</p>
+        <h2><a href={postPath(p)}>{p.data.title}</a></h2>
+        <p>{p.data.description}</p>
+      </li>
+    ))}
+  </ol>
+  {articles.length > 0 && (
+    <>
+      <h2 class="eyebrow">{t(lang, 'home.latest')}</h2>
+      <ul class="post-list">
+        {articles.map((p) => (
+          <li>
+            <h3><a href={postPath(p)}>{p.data.title}</a></h3>
+            <p class="meta"><time datetime={p.data.date.toISOString()}>{formatDate(p.data.date, lang)}</time></p>
+            <p>{p.data.description}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="meta"><a href={localePath(lang, '/rss.xml')}>{t(lang, 'ecrits.rss')}</a></p>
+    </>
+  )}
+</MarkdownPage>

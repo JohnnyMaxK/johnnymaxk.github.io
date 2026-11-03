@@ -1,12 +1,8 @@
-node_modules/
-dist/
+# Local Playwright symlink for tools/ (never committed)
+*.log
+.DS_Store
 .astro/
 .env
 .env.*
-*.log
-.DS_Store
-# CV endpoints: filled config, PDF and counters never go in git.
-cv-private/
-public/_private/*
-!public/_private/.htaccess
-*.pdf
+dist/
+node_modules/

@@ -1,9 +1,12 @@
 ---
-// CV on request (Parcours page). The site is static (GitHub Pages): no form, a mailto link only.
-// The PHP endpoints (public/cv.php) are kept for a future Infomaniak hosting; see README.md.
+// CV on request (Parcours page). The site is static: no form, a mailto link only.
+import { t, type Lang } from '../i18n/ui';
+import { contact } from '../site.config';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
 ---
 <section class="cv-request" aria-labelledby="cv-titre" id="cv">
-  <h2 id="cv-titre">Recevoir mon CV en PDF</h2>
-  <p>Mon CV n’est pas en ligne : écrivez-moi et je vous l’envoie par retour de mail.</p>
-  <p><a href="mailto:johnny@knoblauch.fr?subject=Demande%20de%20CV">Demander mon CV à johnny@knoblauch.fr</a></p>
+  <h2 id="cv-titre">{t(lang, 'cv.title')}</h2>
+  <p>{t(lang, 'cv.text')}</p>
+  <p><a href={`mailto:${contact.email}?subject=${encodeURIComponent(t(lang, 'cv.subject'))}`}>{t(lang, 'cv.link')} {contact.email}</a></p>
 </section>

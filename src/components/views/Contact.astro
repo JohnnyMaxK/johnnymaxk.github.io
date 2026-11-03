@@ -1,0 +1,13 @@
+---
+import MarkdownPage from '../MarkdownPage.astro';
+import { t, type Lang } from '../../i18n/ui';
+import { contact } from '../../site.config';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<MarkdownPage id="contact" lang={lang}>
+  <ul>
+    <li>{t(lang, 'contact.linkedin')} : <a href={contact.linkedin} rel="me noopener">{contact.linkedinLabel}</a></li>
+    <li>{t(lang, 'contact.mail')} : <a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+  </ul>
+</MarkdownPage>

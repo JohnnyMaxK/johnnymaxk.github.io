@@ -1,0 +1,33 @@
+# Site check: builds the site, then renders every page in headless Chromium at desktop and phone
+# widths and fails on console errors, missing h1/canonical/alt, horizontal overflow, broken hreflang
+# pairs, invalid JSON-LD, dead internal links, a theme toggle that does nothing, an llms.txt /
+# sitemap that cites a missing page, or a forbidden term in dist. Script: tools/checks/site-check.mjs.
+# Runs on every push and PR. deploy.yml calls it too (workflow_call): a red check blocks deployment.
+name: Site check
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install Playwright Chromium
+        run: |
+          npm i --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render every page and check it
+        run: node tools/checks/site-check.mjs

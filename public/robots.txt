@@ -1,6 +1,24 @@
+# johnny.knoblauch.fr — everyone is welcome, AI crawlers included.
 User-agent: *
 Allow: /
-Disallow: /cv-download.php
-Disallow: /cv/
+
+# Generative answer engines, explicitly allowed. A concise overview is at /llms.txt.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 Sitemap: https://johnny.knoblauch.fr/sitemap-index.xml

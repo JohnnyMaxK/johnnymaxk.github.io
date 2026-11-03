@@ -1,0 +1,41 @@
+---
+// One note or article, at /idees/<slug>/ (or /en/idees/<slug>/).
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { formatDate, localePath, t, type Lang } from '../../i18n/ui';
+import { counterparts, postPath, posts, type Post } from '../../lib';
+import { slugOf } from '../../i18n/ui';
+interface Props { lang: Lang; post: Post }
+const { lang, post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, date, updated, tags, kind, tag } = post.data;
+const isNote = kind === 'note';
+const alternates = await counterparts(post);
+const notes = isNote ? (await posts(lang)).filter((p) => p.data.kind === 'note') : [];
+const i = notes.findIndex((p) => p.id === post.id);
+const prev = i > 0 ? notes[i - 1] : null;
+const next = i >= 0 && i < notes.length - 1 ? notes[i + 1] : null;
+// One OpenGraph image per text, rendered by `npm run og` into public/og/<lang>-<name>.png.
+const image = `/og/${lang}-${slugOf(post.id)}.png`;
+---
+<Base title={title} description={description} lang={lang} type="article" published={date} updated={updated} alternates={alternates} image={image}>
+  <article class="note">
+    <header>
+      {isNote && tag && <p class="eyebrow">{tag}</p>}
+      <h1>{title}</h1>
+      {!isNote && (
+        <p class="meta">
+          {t(lang, 'ecrits.published')} <time datetime={date.toISOString()}>{formatDate(date, lang)}</time>
+          {updated && <> · {t(lang, 'ecrits.updated')} <time datetime={updated.toISOString()}>{formatDate(updated, lang)}</time></>}
+        </p>
+      )}
+      {tags.length > 0 && <ul class="tags" aria-label="Tags">{tags.map((x) => <li>{x}</li>)}</ul>}
+    </header>
+    <Content />
+  </article>
+  <nav class="note-nav" aria-label={t(lang, 'note.nav')}>
+    {prev && <a class="note-prev" href={postPath(prev)} rel="prev"><span class="eyebrow">{t(lang, 'note.prev')}</span>{prev.data.title}</a>}
+    {next && <a class="note-next" href={postPath(next)} rel="next"><span class="eyebrow">{t(lang, 'note.next')}</span>{next.data.title}</a>}
+  </nav>
+  <p class="meta"><a href={localePath(lang, '/idees/')}>← {t(lang, 'ecrits.back')}</a></p>
+</Base>

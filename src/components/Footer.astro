@@ -1,14 +1,17 @@
 ---
-import { t, type Lang } from '../i18n/ui';
+import { t, localePath, type Lang } from '../i18n/ui';
+import { contact } from '../site.config';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const year = new Date().getFullYear();
+const notice = t(lang, 'translated.notice');
 ---
 <footer class="site">
   <div class="wrap">
     <span>© {year} {t(lang, 'site.name')}</span>
-    <a href="/mentions-legales/">{t(lang, 'footer.legal')}</a>
-    <a href="/rss.xml">{t(lang, 'footer.rss')}</a>
+    <a href={localePath(lang, '/mentions-legales/')}>{t(lang, 'footer.legal')}</a>
+    <a href={localePath(lang, '/rss.xml')}>{t(lang, 'footer.rss')}</a>
     <span>{t(lang, 'footer.notrack')}</span>
+    {notice && <p class="translated">{notice} <a href={`mailto:${contact.email}`}>{contact.email}</a></p>}
   </div>
 </footer>

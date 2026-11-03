@@ -2,23 +2,101 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { defaultLang, t, type Lang } from '../i18n/ui';
+import { activeLangs, defaultLang, languages, locales, localePath, stripLang, t, type Lang } from '../i18n/ui';
+import { contact, site } from '../site.config';
 
 interface Props {
   title: string;
   description?: string;
   lang?: Lang;
-  type?: 'website' | 'article';
+  type?: 'website' | 'article' | 'profile';
   image?: string;
   published?: Date;
+  updated?: Date;
   noindex?: boolean;
+  /** Pages that exist in one language only pass false: no hreflang pair is declared. */
+  translated?: boolean;
+  /** Explicit paths per language when they do not follow the shared-slug rule (notes, articles). */
+  alternates?: Partial<Record<Lang, string>>;
+  wide?: boolean;
 }
-const { title, description, lang = defaultLang, type = 'website', image = '/og-default.png', published, noindex = false } = Astro.props;
+const {
+  title, description, lang = defaultLang, type = 'website', image = '/og-default.png',
+  published, updated, noindex = false, translated = true, wide = false, alternates: given,
+} = Astro.props;
 const siteName = t(lang, 'site.name');
 const desc = description ?? t(lang, 'site.description');
-const fullTitle = Astro.url.pathname === '/' ? siteName : `${title} · ${siteName}`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const bare = stripLang(path);
+const isHome = bare === '/';
+const fullTitle = isHome ? `${siteName} · ${site.jobTitle}` : `${title} · ${siteName}`;
+const canonical = new URL(path, Astro.site);
 const ogImage = new URL(image, Astro.site);
+const altPaths: Partial<Record<Lang, string>> = given
+  ? given
+  : translated ? Object.fromEntries(activeLangs.map((l) => [l, localePath(l, bare)])) : {};
+// One language built: no hreflang at all and no language switch.
+const alternates = activeLangs.length < 2 ? [] : activeLangs
+  .filter((l) => altPaths[l])
+  .map((l) => ({ lang: l, href: new URL(altPaths[l]!, Astro.site).href }));
+const otherLang = activeLangs.find((l) => l !== lang);
+const switchHref = otherLang ? altPaths[otherLang] ?? localePath(otherLang, '/') : undefined;
+
+// Structured data: the person behind the site on every page, then the page itself.
+const personId = `${site.url}/#person`;
+const websiteId = `${site.url}/#website`;
+const person = {
+  '@type': 'Person',
+  '@id': personId,
+  name: site.person,
+  url: `${site.url}/`,
+  image: `${site.url}${site.portrait}`,
+  jobTitle: site.jobTitle,
+  description: t(lang, 'site.description'),
+  email: `mailto:${contact.email}`,
+  sameAs: [contact.linkedin, contact.github],
+  address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: site.country },
+  worksFor: { '@type': 'Organization', name: site.employer },
+  knowsAbout: site.knowsAbout,
+  knowsLanguage: Object.keys(languages), // the languages he speaks, whatever the site is built in
+};
+const website = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  url: `${site.url}/`,
+  name: siteName,
+  inLanguage: activeLangs.map((l) => locales[l]),
+  publisher: { '@id': personId },
+};
+const pageNode =
+  type === 'article'
+    ? {
+        '@type': 'Article',
+        '@id': `${canonical.href}#article`,
+        headline: title,
+        description: desc,
+        inLanguage: locales[lang],
+        url: canonical.href,
+        image: ogImage.href,
+        datePublished: published?.toISOString(),
+        dateModified: (updated ?? published)?.toISOString(),
+        author: { '@id': personId },
+        publisher: { '@id': personId },
+        isPartOf: { '@id': websiteId },
+        mainEntityOfPage: canonical.href,
+      }
+    : {
+        '@type': isHome ? 'ProfilePage' : 'WebPage',
+        '@id': `${canonical.href}#page`,
+        url: canonical.href,
+        name: fullTitle,
+        description: desc,
+        inLanguage: locales[lang],
+        isPartOf: { '@id': websiteId },
+        about: { '@id': personId },
+        ...(isHome ? { mainEntity: { '@id': personId } } : {}),
+      };
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [person, website, pageNode] });
 ---
 <!doctype html>
 <html lang={lang}>
@@ -27,24 +105,32 @@ const ogImage = new URL(image, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
+    <meta name="author" content={site.person} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    {alternates.length > 1 && <link rel="alternate" hreflang="x-default" href={alternates[0].href} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={t(lang, 'idees.rss')} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={t(lang, 'ecrits.rss')} href={localePath(lang, '/rss.xml')} />
+    <link rel="me" href={contact.linkedin} />
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#1f1812" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta property="og:type" content={type} />
+    <meta property="og:type" content={type === 'profile' ? 'profile' : type} />
     <meta property="og:site_name" content={siteName} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={isHome ? fullTitle : title} />
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:image:alt" content={siteName} />
+    <meta property="og:locale" content={locales[lang].replace('-', '_')} />
+    {alternates.filter((a) => a.lang !== lang).map((a) => <meta property="og:locale:alternate" content={locales[a.lang].replace('-', '_')} />)}
     {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {updated && <meta property="article:modified_time" content={updated.toISOString()} />}
     <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={jsonLd} />
     <!-- Theme: dark unless the visitor chose light (stored locally, never sent). -->
     <script is:inline>
       try { const s = localStorage.getItem('theme'); if (s === 'light' || s === 'dark') document.documentElement.dataset.theme = s; } catch (e) {}
@@ -53,8 +139,8 @@ const ogImage = new URL(image, Astro.site);
   <body>
     <a class="skip-link" href="#contenu">{t(lang, 'skip')}</a>
     <slot name="bandeau" />
-    <Header lang={lang} />
-    <main id="contenu" class="wrap" tabindex="-1">
+    <Header lang={lang} switchHref={switchHref} />
+    <main id="contenu" class={wide ? 'wrap-wide' : 'wrap'} tabindex="-1">
       <slot />
     </main>
     <Footer lang={lang} />

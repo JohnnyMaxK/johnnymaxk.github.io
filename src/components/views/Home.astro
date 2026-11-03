@@ -1,0 +1,59 @@
+---
+// The home page, in either language: the band, two paragraphs from Markdown, the five notes by their
+// own titles and one line to Parcours. Nothing that talks about the site; contact is in the menu.
+import { getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Bandeau from '../Bandeau.astro';
+import { formatDate, localePath, t, type Lang } from '../../i18n/ui';
+import { postPath, posts } from '../../lib';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const entry = await getEntry('pages', `${lang}/accueil`);
+if (!entry) throw new Error(`Missing page content: src/content/pages/${lang}/accueil.md`);
+const { Content } = await render(entry);
+const d = entry.data;
+const all = await posts(lang);
+const notes = all.filter((p) => p.data.kind === 'note');
+const latest = all.filter((p) => p.data.kind !== 'note').slice(0, 3);
+---
+<Base title={d.title} description={d.description} lang={lang} type="profile">
+  <Bandeau slot="bandeau" lang={lang} />
+
+  <section class="home-intro" aria-label={d.title}>
+    <Content />
+  </section>
+
+  {notes.length > 0 && (
+    <section class="home-section" aria-labelledby="idees-titre">
+      <h2 id="idees-titre" class="home-fight">{d.fight}</h2>
+      <ol class="note-list">
+        {notes.map((p) => (
+          <li>
+            <p class="eyebrow">{p.data.tag}</p>
+            <h3><a href={postPath(p)}>{p.data.title}</a></h3>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {d.parcours && (
+    <p class="home-door">{d.parcours.before} <a href={localePath(lang, '/parcours/')}>{d.parcours.link}</a> {d.parcours.after}</p>
+  )}
+
+  {latest.length > 0 && (
+    <section class="home-section" aria-labelledby="derniers-ecrits">
+      <h2 id="derniers-ecrits" class="eyebrow">{t(lang, 'home.latest')}</h2>
+      <ul class="post-list">
+        {latest.map((e) => (
+          <li>
+            <a href={postPath(e)}>{e.data.title}</a>
+            <span class="meta"> · <time datetime={e.data.date.toISOString()}>{formatDate(e.data.date, lang)}</time></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+</Base>
